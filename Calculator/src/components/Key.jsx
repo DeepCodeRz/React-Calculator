@@ -33,7 +33,7 @@ export default function Key({ type, children, calculation, setCalculation }) {
                 children === 0,
             "w-16 ml-0 bg-border hover:bg-gray-300 transition-all duration-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white dark:border-gray-700":
                 type === "operation",
-            "w-16 bg-black border-0 text-white hover:bg-gray-800 dark:bg-gray-300 dark:text-black dark:hover:bg-gray-400":
+            "w-16 bg-black border-0 text-white transition-all duration-200 hover:bg-gray-700 dark:bg-gray-300 dark:text-black dark:hover:bg-gray-400":
                 children === "=",
         }
     );
