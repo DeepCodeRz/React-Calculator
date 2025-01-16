@@ -1,36 +1,46 @@
 import clsx from 'clsx';
 
-export default function Key(props) {
-    function handleClick() {
-        if (props.type === "clear") {
-            props.setCalculation("")
-            console.log(props.calculation)
-        } else if (props.type === "operation") {
-            props.setCalculation((prev) => prev + props.children)
-            console.log(props.calculation)
-        } else if (props.type === "number") {
-            if (props.calculation[0] === "=") {
-                props.setCalculation(`${props.children}`)
-            } else {
-                props.setCalculation((prev) => prev + props.children)
-            }
-        } else if (props.type === "result") {
-            const result = new Function(`return ${props.calculation}`)()
-            props.setCalculation(`= ${result}`)
+export default function Key({ type, children, calculation, setCalculation }) {
+    const handleClick = () => {
+        switch (type) {
+            case "operation":
+                setCalculation(prev => prev + children);
+                break;
+            case "number":
+                setCalculation(prev => calculation[0] === "=" ? `${children}` : prev + children);
+                break;
+            case "functionality":
+                if (children === "=") {
+                    const result = new Function(`return ${calculation}`)();
+                    setCalculation(`= ${result}`);
+                } else if (children === "C") {
+                    setCalculation("");
+                } else {
+                    setCalculation(prev => prev + children);
+                }
+                break;
+            default:
+                break;
         }
-    }
+    };
+
+    const buttonClass = clsx(
+        "h-14 m-1 border border-border text-center text-xl font-semibold rounded-xl shadow-md",
+        {
+            "w-16 bg-white hover:bg-border transition-all duration-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white dark:border-gray-700":
+                (type === "number" && children !== 0) || (type === "functionality" && children !== "="),
+            "w-[136px] bg-white hover:bg-border transition-all duration-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white dark:border-gray-700":
+                children === 0,
+            "w-16 ml-0 bg-border hover:bg-gray-300 transition-all duration-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white dark:border-gray-700":
+                type === "operation",
+            "w-16 bg-black border-0 text-white hover:bg-gray-800 dark:bg-gray-300 dark:text-black dark:hover:bg-gray-400":
+                children === "=",
+        }
+    );
 
     return (
-        <button
-            className={clsx("h-14 m-1 border border-border text-center text-xl font-semibold rounded-xl shadow-md transition-all duration-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white dark:border-gray-700", {
-                "w-16 m-1 bg-white hover:bg-border" : (props.type === "number" && props.children !== "0") ,
-                "w-[136px] bg-white hover:bg-border" : props.children === 0,
-                "w-16 ml-0 bg-border hover:bg-gray-300" : props.type === "operation",
-                "w-1/2 bg-black text-white hover:bg-gray-800 dark:bg-gray-300 dark:text-black dark:hover:bg-gray-400" : props.type === "result",
-                "w-1/2 ml-0 bg-white hover:bg-border" : props.type === "clear",
-            })}
-            onClick={handleClick}>
-            {props.type === "clear" ? "C" : props.children}
+        <button className={buttonClass} onClick={handleClick}>
+            {type === "clear" ? "C" : children}
         </button>
-    )
+    );
 }
