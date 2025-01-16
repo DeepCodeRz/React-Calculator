@@ -13,7 +13,7 @@ export default function DarkModeToggle(props) {
     }, [isDarkMode]);
 
     return (
-        <label className="inline-flex items-center cursor-pointer">
+        <label className="inline-flex items-center justify-center cursor-pointer">
             <input
                 type="checkbox"
                 checked={isDarkMode}
